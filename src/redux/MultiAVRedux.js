@@ -23,6 +23,9 @@ const { Types, Creators } = createActions({
     updateJoinedMembers: [ 'removed' ],
     resetAll: null,
 
+		setRtcStat: ['stat'],
+		setRtcInfo: ['info'],
+
     /* ------async------ */
     // 发起群会议
     updateConfrInfoAsync: (gid, rec, recMerge) => {
@@ -63,10 +66,26 @@ export const INITIAL_STATE = Immutable({
     },
     localStream: {},
     selectedMembers: [],
-    joinedMembers: []
+    joinedMembers: [],
+		rtcStat: 0, //0 没有通话 1 邀请中  2 被邀请中  3 在通话,
+		rtcInfo: {
+			conferenceNotice: "", //int类型，1，会议邀请；2，用户加入（1v1）；
+			conferenceId: "", //String类型,会议roomId;
+			isGroupChat:"",//boolean类型true/false；
+			isVideoOff: "",//boolean类型true/false；
+			fromNickName: "",//String类型，邀请人昵称；
+		}
 })
 
 /* ------ Reducers ------ */
+
+export const setRtcStat = (state, {stat}) => {
+	return state.setIn([ 'rtcStat' ], stat)
+}
+
+export const setRtcInfo = (state, { info} ) => {
+	return state.setIn([ 'rtcInfo' ], info)
+}
 
 export const setSelectedMembers = (state, { selected }) => {
     return state.setIn([ 'selectedMembers' ], selected)
@@ -135,5 +154,7 @@ export const reducer = createReducer(INITIAL_STATE, {
     [Types.SET_SELECTED_MEMBERS]: setSelectedMembers,
     [Types.SET_JOINED_MEMBERS]: setJoinedMembers,
     [Types.UPDATE_JOINED_MEMBERS]: updateJoinedMembers,
-    [Types.RESET_ALL]: resetAll
+    [Types.RESET_ALL]: resetAll,
+		[Types.SET_RTC_STAT]: setRtcStat,
+		[Types.SET_RTC_INFO]: setRtcInfo,
 })

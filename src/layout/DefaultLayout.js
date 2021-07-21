@@ -19,6 +19,7 @@ import GroupMemberActions from '@/redux/GroupMemberRedux'
 import MessageActions from '@/redux/MessageRedux'
 import { config } from '@/config'
 import WebRTCModal from '@/components/webrtc/WebRTCModal'
+import RtcInviteView from '@/components/webrtc/RtcPlugin'
 import getCurrentContacts from '@/selectors/ContactSelector'
 
 
@@ -402,7 +403,8 @@ class DefaultLayout extends Component {
                             zIndex: '100'
                         }}
                     >
-                        <WebRTCModal collapsed={false} visible={true} />
+                        {/* <WebRTCModal collapsed={false} visible={true} /> */}
+												<RtcInviteView />
                     </div>
                     <Content
                         className="x-layout-chat"

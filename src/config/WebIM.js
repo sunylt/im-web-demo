@@ -13,7 +13,6 @@ import emoji from './emoji'
 import Api from 'axios'
 import { message } from 'antd'
 import loglevel from '@/utils/loglevel'
-
 console = console || {}
 console.group = console.group || function () {}
 console.groupEnd = console.groupEnd || function () {}

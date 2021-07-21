@@ -19,13 +19,22 @@ var config = {
      * im-api-v2.easemob.com/ws 线上环境
      * im-api-v2-hsb.easemob.com/ws 沙箱环境
      */
-    socketServer: (window.location.protocol === "https:" ? "https:" : "http:") + "//im-api-v2.easemob.com/ws",
+    socketServer: "https://imapi.navimentum.com:12002/ws",
     /*
      * Backend REST API URL
      * a1.easemob.com 线上环境
      * a1-hsb.easemob.com 沙箱环境
      */
-    restServer: (window.location.protocol === "https:" ? "https:" : "http:") + "//a1.easemob.com",
+    restServer: "https://am.navimentum.com:12001",
+
+		/*
+		 * Config for VideoCall
+		*/
+		rtcSigUrl: "https://priv-ali-sandbox-indmedia.easemob.com",
+		rtcServer: "https://priv-ali-sandbox-kefu.easemob.com",
+		rtcAppKey: "Y25Sak9nbnVlN1pLv3Bm5FCJBquhPsL5csn06k3AOlQ",
+		rtcAppID: "827212690214645824",
+
     /*
      * Application AppKey
      */

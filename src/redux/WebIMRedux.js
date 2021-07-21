@@ -12,6 +12,7 @@ import SubscribeActions from '@/redux/SubscribeRedux'
 import BlacklistActions from '@/redux/BlacklistRedux'
 import MessageActions from '@/redux/MessageRedux'
 import GroupRequestActions from '@/redux/GroupRequestRedux'
+import MultiAVActions from '@/redux/MultiAVRedux'
 import { store } from '@/redux'
 import { history } from '@/utils'
 import utils from '@/utils'
@@ -21,6 +22,7 @@ import RTCChannel from '@/components/webrtc/rtcChannel'
 import WebRTCModal from '@/components/webrtc/WebRTCModal'
 
 import { message, Modal } from 'antd'
+import { emediaPlugin, RtcManager } from '../components/webrtc/RtcPlugin'
 
 const logger = WebIM.loglevel.getLogger('WebIMRedux')
 
@@ -317,6 +319,31 @@ WebIM.conn.listen({
                 }
                 WebIM.call.listener.onInvite(from, options)
             }
+
+						/*
+						conferenceNotice，int;1邀请，2加入，3拒接，4取消
+						conferenceId，String；会议roomId随机六位数字
+						isVideoOff，boolean;是否默认不开启摄像头
+						fromNickName，String;发起人昵称
+						isGroupChat，boolean;是否是从群聊中发起的会议
+						*/
+						if(message && message.ext && message.ext.conferenceNotice){
+							console.log("video call message", message)
+							const { conferenceNotice } = message.ext
+							if(conferenceNotice === 1) {
+								store.dispatch(MultiAVActions.setRtcStat(2)) // 收到邀请显示接听界面
+								RtcManager.rtcInfo = message.ext
+							} else if(conferenceNotice === 2){
+								 // 收到对方加入 隐藏呼叫界面且显示音视频iframe窗口
+								 store.dispatch(MultiAVActions.setRtcStat(0))
+								 document.querySelector("#emedia-iframe-wrapper").style.display = "flex"
+							} else if(conferenceNotice === 3){
+								emediaPlugin.exit(true)
+								store.dispatch(MultiAVActions.setRtcStat(0)) // 收到对方拒接，隐藏呼叫界面并exit音视频
+							} else if(conferenceNotice === 4) {
+								store.dispatch(MultiAVActions.setRtcStat(0)) // 收到对方取消音视频邀请，隐藏接听界面
+							}
+						}
             break
         case 'groupchat':
             store.dispatch(GroupActions.topGroup(to))

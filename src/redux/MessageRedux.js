@@ -1,6 +1,6 @@
 import { createReducer, createActions } from 'reduxsauce'
 import Immutable from 'seamless-immutable'
-import _ from 'lodash'
+import _, { conformsTo } from 'lodash'
 import WebIM from '@/config/WebIM'
 import { store } from '@/redux'
 import AppDB from '@/utils/AppDB'
@@ -212,7 +212,7 @@ const { Types, Creators } = createActions({
         return (dispatch, getState) => {
             const pMessage = parseFromLocal(chatType, chatId, message, 'txt')
             // const pMessage = parseFromLocal(chatType, chatId, message, 'custom')
-            const { body, id, to } = pMessage
+            const { body, id, to, ext } = pMessage
             const { type, msg } = body
             const msgObj = new WebIM.message(type, id)
             const chatroom = chatType === 'chatroom'
@@ -229,7 +229,7 @@ const { Types, Creators } = createActions({
                     console.warn('发送txt失败，确认是否被禁言、拉黑等')
                     dispatch(Creators.updateMessageStatus(pMessage, 'fail'))
                 },
-                ext: {}
+                ext
             })
 
             // 最新的写法，也兼容老的写法，其他类型消息用的老写法

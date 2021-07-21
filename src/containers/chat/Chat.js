@@ -27,6 +27,7 @@ import WebRTCModal from '@/components/webrtc/WebRTCModal'
 import AddAVMemberModal from '@/components/webrtc/AddAVMemberModal'
 import ModalComponent from '@/components/common/ModalComponent'
 import RecordAudio from '@/components/recorder/index'
+import { emediaPlugin, RtcManager } from '../../components/webrtc/RtcPlugin'
 
 const { TextArea } = Input
 const FormItem = Form.Item
@@ -304,6 +305,35 @@ class Chat extends React.Component {
         if (this.timer) clearTimeout(this.timer)
     }
 
+		callVideoNew = () => {
+				// 1、判断是否在音视频中
+				// 2、创建会议之后发送邀请消息
+
+				const {sendTxtMessage, setRtcStat} = this.props
+				const { selectItem, selectTab } = _.get(this.props, [ 'match', 'params' ], {})
+				const ctype = chatType[selectTab]
+
+				RtcManager.createConference(roomId => {
+					sendTxtMessage(ctype, selectItem, { 
+						msg: "邀请您进行音视频聊天",
+						ext: {
+							conferenceNotice: 1,//int类型，1，会议邀请；2，用户加入（1v1）；
+							conferenceId: roomId, ///String类型,会议roomId;
+							isGroupChat: ctype === "chat" ? false : true, //boolean类型true/false；
+							isVideoOff: false, //boolean类型true/false；
+							fromNickName: roomId,//String类型，邀请人昵称；
+						}
+					})
+
+					// 缓存被邀请人信息
+					RtcManager.inviteeInfo = {
+						userId: selectItem,
+						chatType: ctype
+					}
+					setRtcStat(1)  // 为等待对方接听状态
+				})
+		}
+
     callVideo = () => {
         if (WebIM.WebRTC.isCalling) {return message.info('通话中...')}
         if (utils.isIOSWebview() || !emedia.isWebRTC) {
@@ -436,7 +466,7 @@ class Chat extends React.Component {
             if (selectTab === 'contact') {
                 // webrtc video button
                 webrtcButtons.push(<label key="video" htmlFor="clearMessage" className="x-chat-ops-icon ib"
-                    onClick={this.callVideo}>
+                    onClick={this.callVideoNew}>
                     <i className="icon iconfont icon-camera-video"></i>
                 </label>)
                 // webrtc audio button
@@ -600,6 +630,7 @@ export default connect(
         updateConfrInfo: (gid, rec, recMerge) => dispatch(MultiAVActions.updateConfrInfoAsync(gid, rec, recMerge)),
         showConfrModal: () => dispatch(MultiAVActions.showConfrModal()),
         closeConfrModal: (gid) => dispatch(MultiAVActions.closeConfrModal()),
-        showP2pModal: () => dispatch(MultiAVActions.showP2pModal())
+        showP2pModal: () => dispatch(MultiAVActions.showP2pModal()),
+				setRtcStat: (code) => dispatch(MultiAVActions.setRtcStat(code))
     })
 )(Chat)
