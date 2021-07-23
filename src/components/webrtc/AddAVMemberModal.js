@@ -3,10 +3,12 @@ import { Button, Checkbox, Form } from 'antd'
 import { I18n } from 'react-redux-i18n'
 import GroupMemberActions from '@/redux/GroupMemberRedux'
 import MultiAVActions from '@/redux/MultiAVRedux'
+import MessageActions from '@/redux/MessageRedux'
 import { connect } from 'react-redux'
 import WebIM from '@/config/WebIM'
 import _ from 'lodash'
 import { store } from '@/redux'
+import { emediaPlugin, RtcManager } from '../../components/webrtc/RtcPlugin'
 
 const CheckboxGroup = Checkbox.Group
 const FormItem = Form.Item
@@ -52,20 +54,6 @@ class AddAVMemberModal extends React.Component {
                  */
                 /* ------ 1 ------ */
                 this.props.onCancel()
-                /* ------ 2 ------ */
-                this.props.showMultiAVModal()
-
-                /* ------ 3 ------ */
-                setTimeout(() => {
-                    const tkt = this.props.confr.ticket
-                    WebIM.EMService.joined(this.props.confr.confrId) || WebIM.EMService.joinConferenceWithTicket(this.props.confr.confrId, tkt, 'user ext field').then(function () {
-                        WebIM.EMService.publish({ audio: true, video: true }, 'user ext field').catch(function (e) {
-                            console.error(e)
-                        })
-                    }).catch(function (e) {
-                        console.error(e)
-                    })
-                }, 0)
 
                 const { members } = values
 
@@ -76,19 +64,83 @@ class AddAVMemberModal extends React.Component {
                 this.props.setSelected(seleted_members)
                 this.props.setGid(gid)
                 let jids = []
-                const appkey = WebIM.config.appkey, spHost = WebIM.config.Host
-                if (seleted_members) {
-                    for (let elem of seleted_members) {
-                        jids.push(appkey + '_' + elem + '@' + spHost)
-                    }
-                }
-                let { confrId, password } = me.props.confr
-                for (let jid of jids) {
-                    WebIM.call.inviteConference(confrId, password='', jid, gid)
-                }
+
+								RtcManager.showIframe() // 直接展示 因为group 被邀请的成员不再发送接受/拒绝的回执消息
+								RtcManager.createConference(roomId => {
+
+									RtcManager.rtcInfo = {
+										fromNickName: roomId,
+										isGroupChat: true
+									}
+
+									seleted_members.forEach(username => {
+										this.props.sendTxtMessage("chat", username, { 
+											msg: "邀请您进行音视频聊天",
+											ext: {
+												conferenceNotice: 1,//int类型，1，会议邀请；2，用户加入（1v1）；
+												conferenceId: roomId, ///String类型,会议roomId;
+												isGroupChat: true, //boolean类型true/false；
+												isVideoOff: false, //boolean类型true/false；
+												fromNickName: roomId,//String类型，邀请人昵称；
+											}
+										})
+									})
+
+								})
             }
         })
     }
+
+		handleSubmitBackup = e => {
+			let me = this
+			e.preventDefault()
+			this.props.form.validateFields((err, values) => {
+					if (!err) {
+							/* 
+							 *  关闭modal，（Done）
+							 *  打开多人音视频界面，（Done）
+							 *  推流，（Done）
+							 *  向成员发出邀请
+							 */
+							/* ------ 1 ------ */
+							this.props.onCancel()
+							/* ------ 2 ------ */
+							this.props.showMultiAVModal()
+
+							/* ------ 3 ------ */
+							setTimeout(() => {
+									const tkt = this.props.confr.ticket
+									WebIM.EMService.joined(this.props.confr.confrId) || WebIM.EMService.joinConferenceWithTicket(this.props.confr.confrId, tkt, 'user ext field').then(function () {
+											WebIM.EMService.publish({ audio: true, video: true }, 'user ext field').catch(function (e) {
+													console.error(e)
+											})
+									}).catch(function (e) {
+											console.error(e)
+									})
+							}, 0)
+
+							const { members } = values
+
+							const { groupMember, gid, selected, joined } = this.props
+
+							let seleted_members = _.difference(members,joined)
+							
+							this.props.setSelected(seleted_members)
+							this.props.setGid(gid)
+							let jids = []
+							const appkey = WebIM.config.appkey, spHost = WebIM.config.Host
+							if (seleted_members) {
+									for (let elem of seleted_members) {
+											jids.push(appkey + '_' + elem + '@' + spHost)
+									}
+							}
+							let { confrId, password } = me.props.confr
+							for (let jid of jids) {
+									WebIM.call.inviteConference(confrId, password='', jid, gid)
+							}
+					}
+			})
+	}
 
     onChange = checkedValues => {
         const len = checkedValues.length
@@ -195,5 +247,7 @@ export default connect(
         showMultiAVModal: () => dispatch(MultiAVActions.showModal()),
         setSelected: (selected) => dispatch(MultiAVActions.setSelectedMembers(selected)),
         setGid: (gid) => dispatch(MultiAVActions.setGid(gid)),
+				sendTxtMessage: (chatType, id, message) => dispatch(MessageActions.sendTxtMessage(chatType, id, message)),
+				setRtcStat: (code) => dispatch(MultiAVActions.setRtcStat(code))
     })
 )(Form.create()(AddAVMemberModal))

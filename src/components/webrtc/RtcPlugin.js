@@ -37,6 +37,28 @@ export const RtcManager = {
 		this.getUserSig(userId).then(res => {
 			this.userSig = res
 		})
+		this.setButtons()
+	},
+	showIframe: function(){
+		document.querySelector("#emedia-iframe-wrapper").style.display = "flex";
+	},
+	hideIframe: function(){
+		document.querySelector("#emedia-iframe-wrapper").style.display = "none";
+	},
+	setButtons: function(){
+		const button = document.createElement("span")
+		button.style.position = "absolute"
+		button.style.right = "10px"
+		button.style.top = "6px"
+		button.style.fontSize = "20px"
+		button.style.cursor = "pointer"
+		button.innerText = "☒"
+		button.title = "退出当前房间"
+		document.querySelector("#emedia-iframe-wrapper").appendChild(button)
+		button.addEventListener("click", function(){
+			emediaPlugin.exit()
+			this.hideIframe()
+		})
 	},
 	getUserSig: function(userId){
 		const {rtcSigUrl, rtcAppID, rtcAppKey} = WebIM.config
@@ -85,23 +107,27 @@ class RtcInviteView extends React.Component{
 		_this.props.hideInviteView()
 		document.querySelector("#emedia-iframe-wrapper").style.display = "flex"
 		RtcManager.joinConference(() => {
-			_this.props.sendTxtMessage(rtcInfo.isGroupChat ? "groupchat" : "chat", rtcInfo.fromNickName, {
-				msg: "已接受音视频邀请",
-				ext: {
-					conferenceNotice: 2
-				}
-			})
+			if(!rtcInfo.isGroupChat){
+				_this.props.sendTxtMessage(rtcInfo.isGroupChat ? "groupchat" : "chat", rtcInfo.fromNickName, {
+					msg: "已接受音视频邀请",
+					ext: {
+						conferenceNotice: 2
+					}
+				})
+			}
 		})
 	}
 
 	refuse = () => {
 		const {isGroupChat, fromNickName} = RtcManager.rtcInfo
-		this.props.sendTxtMessage(isGroupChat ? "groupchat" : "chat", fromNickName, {
-			msg: "拒绝接受音视频",
-			ext: {
-				conferenceNotice: 3
-			}
-		})
+		if(!isGroupChat){
+			this.props.sendTxtMessage(isGroupChat ? "groupchat" : "chat", fromNickName, {
+				msg: "拒绝接受音视频",
+				ext: {
+					conferenceNotice: 3
+				}
+			})
+		}
 		this.props.hideInviteView()
 	}
 
