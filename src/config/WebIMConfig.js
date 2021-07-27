@@ -19,13 +19,13 @@ var config = {
      * im-api-v2.easemob.com/ws 线上环境
      * im-api-v2-hsb.easemob.com/ws 沙箱环境
      */
-    socketServer: "https://imapi.navimentum.com:12002/ws",
+    socketServer: "https://private-preview-imapi.easemob.com/ws",
     /*
      * Backend REST API URL
      * a1.easemob.com 线上环境
      * a1-hsb.easemob.com 沙箱环境
      */
-    restServer: "https://am.navimentum.com:12001",
+    restServer: "https://private-preview-a1.easemob.com",
 
 		/*
 		 * Config for VideoCall
@@ -38,7 +38,7 @@ var config = {
     /*
      * Application AppKey
      */
-    appkey: 'easemob-demo#chatdemoui',
+    appkey: 'preview#chat',
     /*
      * Application Host
      */
