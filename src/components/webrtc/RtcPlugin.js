@@ -5,10 +5,14 @@ import MultiAVActions from '@/redux/MultiAVRedux'
 import MessageActions from '@/redux/MessageRedux'
 
 export const emediaPlugin = new EmediaPlugin({
+	mode: 'iframe',
 	iframeSrc: WebIM.config.rtcServer + "/emedia-app/plugin.html",
-	success: function(){},
-	onExit: () => {
-		document.querySelector("#emedia-iframe-wrapper").style.display = "none";
+	serviceURL: WebIM.config.rtcServer,
+	// success: function(){},
+	listeners: {
+		onMeExit: () => {
+			document.querySelector("#emedia-iframe-wrapper").style.display = "none";
+		}
 	}
 })
 
