@@ -66,10 +66,10 @@ class AddAVMemberModal extends React.Component {
                 let jids = []
 
 								RtcManager.showIframe() // 直接展示 因为group 被邀请的成员不再发送接受/拒绝的回执消息
-								RtcManager.createConference(roomId => {
+								RtcManager.createConference((roomId, fromUser) => {
 
 									RtcManager.rtcInfo = {
-										fromNickName: roomId,
+										fromNickName: fromUser,
 										isGroupChat: true
 									}
 
@@ -81,7 +81,7 @@ class AddAVMemberModal extends React.Component {
 												conferenceId: roomId, ///String类型,会议roomId;
 												isGroupChat: true, //boolean类型true/false；
 												isVideoOff: false, //boolean类型true/false；
-												fromNickName: roomId,//String类型，邀请人昵称；
+												fromNickName: fromUser,//String类型，邀请人昵称；
 											}
 										})
 									})

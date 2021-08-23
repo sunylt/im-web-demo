@@ -313,7 +313,7 @@ class Chat extends React.Component {
 				const { selectItem, selectTab } = _.get(this.props, [ 'match', 'params' ], {})
 				const ctype = chatType[selectTab]
 
-				RtcManager.createConference(roomId => {
+				RtcManager.createConference((roomId, fromUser) => {
 					sendTxtMessage(ctype, selectItem, { 
 						msg: "邀请您进行音视频聊天",
 						ext: {
@@ -321,7 +321,7 @@ class Chat extends React.Component {
 							conferenceId: roomId, ///String类型,会议roomId;
 							isGroupChat: ctype === "chat" ? false : true, //boolean类型true/false；
 							isVideoOff: false, //boolean类型true/false；
-							fromNickName: roomId,//String类型，邀请人昵称；
+							fromNickName: fromUser,//String类型，邀请人昵称；
 						}
 					})
 

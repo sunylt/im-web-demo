@@ -12,6 +12,12 @@ export const emediaPlugin = new EmediaPlugin({
 	listeners: {
 		onMeExit: () => {
 			document.querySelector("#emedia-iframe-wrapper").style.display = "none";
+		},
+		onAddMember: function(){
+			console.log("some one ad。。。d")
+		},
+		onRemoveMemeber: function(){
+			console.log("some one remove")
 		}
 	}
 })
@@ -36,8 +42,9 @@ export const RtcManager = {
 
 	rtcInfo: null, // 当前接受到的会议信息， 结构如上
 
-	init: function(userId){
+	init: function(userId, token){
 		this.userId = userId
+		this.token = token
 		this.getUserSig(userId).then(res => {
 			this.userSig = res
 		})
@@ -50,6 +57,7 @@ export const RtcManager = {
 		document.querySelector("#emedia-iframe-wrapper").style.display = "none";
 	},
 	setButtons: function(){
+		const me = this
 		const button = document.createElement("span")
 		button.style.position = "absolute"
 		button.style.right = "10px"
@@ -61,29 +69,37 @@ export const RtcManager = {
 		document.querySelector("#emedia-iframe-wrapper").appendChild(button)
 		button.addEventListener("click", function(){
 			emediaPlugin.exit()
-			this.hideIframe()
+			me.hideIframe()
 		})
 	},
 	getUserSig: function(userId){
-		const {rtcSigUrl, rtcAppID, rtcAppKey} = WebIM.config
-		return fetch(`${rtcSigUrl}/management/room/player/usersig?name=${userId}&sdkAppId=${rtcAppID}&sdkAppKey=${rtcAppKey}`)
+		const {rtcSigUrl, rtcServer, rtcAppID, rtcAppKey} = WebIM.config
+		return fetch(`${rtcSigUrl || rtcServer}/management/room/player/usersig?name=${userId}&sdkAppId=${rtcAppID}&sdkAppKey=${rtcAppKey}`)
 		.then(res => res.text())
 	},
+	// getUserSig: function(userId){
+	// 	const {rtcSigUrl, rtcServer, rtcAppID, rtcAppKey, restServer, appkey} = WebIM.config
+	// 	const [orgName, appName] = appkey.split("#")
+	// 	return fetch(`${rtcSigUrl || rtcServer}/emedia/get_usersig_for_im?orgName=${orgName}&appName=${appName}&restDomain=${restServer}&userId=${userId}&token=${this.token}`)
+	// 	.then(res => res.json())
+	// },
 	createConference: function(callback){
+		const roomId = "rtc_room_" + this.userId + "_" + (+new Date())
 		emediaPlugin.joinRoom({
-			room_id: this.userId,
+			room_id: roomId,
 			user_sig: this.userSig,
 			user_id: this.userId,
 			app_id: WebIM.config.rtcAppID
 		})
 		.then((res) => {
-			callback(this.userId)
+			callback(roomId, this.userId)
 		})
 		.catch((e) => {
 			console.log('加入房间失败', e)
 		})
 	},
 	joinConference: function(callback){
+		console.log(this.rtcInfo)
 		emediaPlugin.joinRoom({
 			room_id: this.rtcInfo.conferenceId,
 			user_sig: this.userSig,
@@ -102,7 +118,8 @@ export const RtcManager = {
 class RtcInviteView extends React.Component{
 	
 	componentDidMount(){
-		RtcManager.init(this.props.username)
+		const {username, token} = this.props
+		RtcManager.init(username, token)
 	}
 
 	accept = () => {
@@ -177,6 +194,7 @@ class RtcInviteView extends React.Component{
 export default connect(
 	(state, props) => ({
 		username: state.login.username,
+		token: state.login.token,
 		rtcStat: state.multiAV.rtcStat
 	}),
 	dispatch => ({

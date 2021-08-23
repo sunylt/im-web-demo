@@ -30,8 +30,8 @@ var config = {
 		/*
 		 * Config for VideoCall
 		*/
-		rtcSigUrl: "https://priv-ali-sandbox-indmedia.easemob.com",
-		rtcServer: "https://priv-ali-sandbox-kefu.easemob.com",
+		// rtcSigUrl: "https://private-preview-media.easemob.com",
+		rtcServer: "https://private-preview-media.easemob.com",
 		rtcAppKey: "Y25Sak9nbnVlN1pLv3Bm5FCJBquhPsL5csn06k3AOlQ",
 		rtcAppID: "827212690214645824",
 
