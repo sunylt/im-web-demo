@@ -72,17 +72,17 @@ export const RtcManager = {
 			me.hideIframe()
 		})
 	},
-	getUserSig: function(userId){
-		const {rtcSigUrl, rtcServer, rtcAppID, rtcAppKey} = WebIM.config
-		return fetch(`${rtcSigUrl || rtcServer}/management/room/player/usersig?name=${userId}&sdkAppId=${rtcAppID}&sdkAppKey=${rtcAppKey}`)
-		.then(res => res.text())
-	},
 	// getUserSig: function(userId){
-	// 	const {rtcSigUrl, rtcServer, rtcAppID, rtcAppKey, restServer, appkey} = WebIM.config
-	// 	const [orgName, appName] = appkey.split("#")
-	// 	return fetch(`${rtcSigUrl || rtcServer}/emedia/get_usersig_for_im?orgName=${orgName}&appName=${appName}&restDomain=${restServer}&userId=${userId}&token=${this.token}`)
-	// 	.then(res => res.json())
+	// 	const {rtcSigUrl, rtcServer, rtcAppID, rtcAppKey} = WebIM.config
+	// 	return fetch(`${rtcSigUrl || rtcServer}/management/room/player/usersig?name=${userId}&sdkAppId=${rtcAppID}&sdkAppKey=${rtcAppKey}`)
+	// 	.then(res => res.text())
 	// },
+	getUserSig: function(userId){
+		const {rtcSigUrl, rtcServer, rtcAppID, rtcAppKey, restServer, appkey} = WebIM.config
+		const [orgName, appName] = appkey.split("#")
+		return fetch(`${rtcSigUrl || rtcServer}/emedia/get_usersig_for_im?orgName=${orgName}&appName=${appName}&restDomain=${restServer}&userId=${userId}&token=${this.token}`)
+		.then(res => res.json()).then(res => res.userSig)
+	},
 	createConference: function(callback){
 		const roomId = "rtc_room_" + this.userId + "_" + (+new Date())
 		emediaPlugin.joinRoom({
