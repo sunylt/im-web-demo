@@ -274,7 +274,7 @@ const { Types, Creators } = createActions({
             const to = chatId
             const msgObj = new WebIM.message(type, id)
             msgObj.set({
-                // apiUrl: WebIM.config.restServer,
+                apiUrl: WebIM.config.restServer,
                 ext: {
                     // file_length: source.fileSize,
                     // filename: source.fileName || "",
