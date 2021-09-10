@@ -322,6 +322,7 @@ class Chat extends React.Component {
 							isGroupChat: ctype === "chat" ? false : true, //boolean类型true/false；
 							isVideoOff: false, //boolean类型true/false；
 							fromNickName: fromUser,//String类型，邀请人昵称；
+							conversationId: fromUser
 						}
 					})
 

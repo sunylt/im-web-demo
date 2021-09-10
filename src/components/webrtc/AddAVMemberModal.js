@@ -82,6 +82,7 @@ class AddAVMemberModal extends React.Component {
 												isGroupChat: true, //boolean类型true/false；
 												isVideoOff: false, //boolean类型true/false；
 												fromNickName: fromUser,//String类型，邀请人昵称；
+												conversationId: gid
 											}
 										})
 									})

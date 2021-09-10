@@ -342,6 +342,8 @@ WebIM.conn.listen({
 								store.dispatch(MultiAVActions.setRtcStat(0)) // 收到对方拒接，隐藏呼叫界面并exit音视频
 							} else if(conferenceNotice === 4) {
 								store.dispatch(MultiAVActions.setRtcStat(0)) // 收到对方取消音视频邀请，隐藏接听界面
+							} else if(conferenceNotice === 5){
+								store.dispatch(MultiAVActions.setRtcStat(0)) // 对方加入异常
 							}
 						}
             break
