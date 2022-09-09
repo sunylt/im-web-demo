@@ -165,7 +165,7 @@ class RtcInviteView extends React.Component{
 				fromNickName: this.props.username
 			}
 		})
-		me.emediaPlugin.exit(true)
+		RtcManager.emediaPlugin.exit(true)
 	}
 
 	close = () => {
