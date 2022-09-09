@@ -27,7 +27,7 @@ import WebRTCModal from '@/components/webrtc/WebRTCModal'
 import AddAVMemberModal from '@/components/webrtc/AddAVMemberModal'
 import ModalComponent from '@/components/common/ModalComponent'
 import RecordAudio from '@/components/recorder/index'
-import { emediaPlugin, RtcManager } from '../../components/webrtc/RtcPlugin'
+import { RtcManager } from '../../components/webrtc/RtcPlugin'
 
 const { TextArea } = Input
 const FormItem = Form.Item

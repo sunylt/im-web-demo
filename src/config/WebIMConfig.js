@@ -79,7 +79,8 @@ var config = {
     /**
      * webrtc supports WebKit and https only
      */
-    isWebRTC: window.RTCPeerConnection && /^https\:$/.test(window.location.protocol),
+    // isWebRTC: window.RTCPeerConnection && /^https\:$/.test(window.location.protocol),
+		isWebRTC: true,
     /*
      * Upload pictures or file to your own server and send message with url
      * @parameter {Boolean} true or false

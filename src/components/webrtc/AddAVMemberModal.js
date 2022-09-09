@@ -8,7 +8,7 @@ import { connect } from 'react-redux'
 import WebIM from '@/config/WebIM'
 import _ from 'lodash'
 import { store } from '@/redux'
-import { emediaPlugin, RtcManager } from '../../components/webrtc/RtcPlugin'
+import { RtcManager } from '../../components/webrtc/RtcPlugin'
 
 const CheckboxGroup = Checkbox.Group
 const FormItem = Form.Item

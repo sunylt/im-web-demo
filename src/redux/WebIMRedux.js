@@ -22,7 +22,7 @@ import RTCChannel from '@/components/webrtc/rtcChannel'
 import WebRTCModal from '@/components/webrtc/WebRTCModal'
 
 import { message, Modal } from 'antd'
-import { emediaPlugin, RtcManager } from '../components/webrtc/RtcPlugin'
+import { RtcManager } from '../components/webrtc/RtcPlugin'
 
 const logger = WebIM.loglevel.getLogger('WebIMRedux')
 
@@ -338,7 +338,7 @@ WebIM.conn.listen({
 								 store.dispatch(MultiAVActions.setRtcStat(0))
 								 document.querySelector("#emedia-iframe-wrapper").style.display = "flex"
 							} else if(conferenceNotice === 3){
-								emediaPlugin.exit(true)
+								RtcManager.emediaPlugin.exit(true)
 								store.dispatch(MultiAVActions.setRtcStat(0)) // 收到对方拒接，隐藏呼叫界面并exit音视频
 							} else if(conferenceNotice === 4) {
 								store.dispatch(MultiAVActions.setRtcStat(0)) // 收到对方取消音视频邀请，隐藏接听界面

@@ -4,24 +4,6 @@ import EmediaPlugin from "@/config/EmediaPlugin"
 import MultiAVActions from '@/redux/MultiAVRedux'
 import MessageActions from '@/redux/MessageRedux'
 
-export const emediaPlugin = new EmediaPlugin({
-	mode: 'iframe',
-	iframeSrc: WebIM.config.rtcServer + "/emedia-app/plugin.html",
-	serviceURL: WebIM.config.rtcServer,
-	// success: function(){},
-	listeners: {
-		onMeExit: () => {
-			document.querySelector("#emedia-iframe-wrapper").style.display = "none";
-		},
-		onAddMember: function(){
-			console.log("some one ad。。。d")
-		},
-		onRemoveMemeber: function(){
-			console.log("some one remove")
-		}
-	}
-})
-
 export const RtcManager = {
 	userId: "", // 当前用户id
 	userSig: "", // 当前用户sig
@@ -48,6 +30,23 @@ export const RtcManager = {
 		this.getUserSig(userId).then(res => {
 			this.userSig = res
 		})
+		this.emediaPlugin = new EmediaPlugin({
+			mode: 'iframe',
+			iframeSrc: WebIM.config.rtcServer + "/emedia-app/plugin.html",
+			serviceURL: WebIM.config.rtcServer,
+			// success: function(){},
+			listeners: {
+				onMeExit: () => {
+					document.querySelector("#emedia-iframe-wrapper").style.display = "none";
+				},
+				onAddMember: function(){
+					console.log("some one ad。。。d")
+				},
+				onRemoveMemeber: function(){
+					console.log("some one remove")
+				}
+			}
+		})
 		this.setButtons()
 	},
 	showIframe: function(){
@@ -68,24 +67,25 @@ export const RtcManager = {
 		button.title = "退出当前房间"
 		document.querySelector("#emedia-iframe-wrapper").appendChild(button)
 		button.addEventListener("click", function(){
-			emediaPlugin.exit()
+			me.emediaPlugin.exit()
 			me.hideIframe()
 		})
 	},
-	// getUserSig: function(userId){
-	// 	const {rtcSigUrl, rtcServer, rtcAppID, rtcAppKey} = WebIM.config
-	// 	return fetch(`${rtcSigUrl || rtcServer}/management/room/player/usersig?name=${userId}&sdkAppId=${rtcAppID}&sdkAppKey=${rtcAppKey}`)
-	// 	.then(res => res.text())
-	// },
 	getUserSig: function(userId){
-		const {rtcSigUrl, rtcServer, rtcAppID, rtcAppKey, restServer, appkey} = WebIM.config
-		const [orgName, appName] = appkey.split("#")
-		return fetch(`${rtcSigUrl || rtcServer}/emedia/get_usersig_for_im?orgName=${orgName}&appName=${appName}&restDomain=${restServer}&userId=${userId}&token=${this.token}`)
-		.then(res => res.json()).then(res => res.userSig)
+		const {rtcSigUrl, rtcServer, rtcAppID, rtcAppKey} = WebIM.config
+		return fetch(`${rtcSigUrl || rtcServer}/management/room/player/usersig?name=${userId}&sdkAppId=${rtcAppID}&sdkAppKey=${rtcAppKey}`)
+		.then(res => res.text())
 	},
+	// getUserSig: function(userId){
+	// 	const {rtcSigUrl, rtcServer, rtcAppID, rtcAppKey, restServer, appkey} = WebIM.config
+	// 	const [orgName, appName] = appkey.split("#")
+	// 	return fetch(`${rtcSigUrl || rtcServer}/emedia/get_usersig_for_im?orgName=${orgName}&appName=${appName}&restDomain=${restServer}&userId=${userId}&token=${this.token}`)
+	// 	.then(res => res.json()).then(res => res.userSig)
+	// },
 	createConference: function(callback){
+    const me = this
 		const roomId = "rtc_room_" + this.userId + "_" + (+new Date())
-		emediaPlugin.joinRoom({
+		me.emediaPlugin.joinRoom({
 			room_id: roomId,
 			user_sig: this.userSig,
 			user_id: this.userId,
@@ -99,8 +99,9 @@ export const RtcManager = {
 		})
 	},
 	joinConference: function(callback){
+    const me = this
 		console.log(this.rtcInfo)
-		emediaPlugin.joinRoom({
+		me.emediaPlugin.joinRoom({
 			room_id: this.rtcInfo.conferenceId,
 			user_sig: this.userSig,
 			user_id: this.userId,
@@ -153,6 +154,7 @@ class RtcInviteView extends React.Component{
 	}
 
 	cancel = () => {
+    const me = this
 		const { userId, chatType } = RtcManager.inviteeInfo
 		this.props.sendTxtMessage(chatType, userId, {
 			msg: "取消音视频",
@@ -163,7 +165,7 @@ class RtcInviteView extends React.Component{
 				fromNickName: this.props.username
 			}
 		})
-		emediaPlugin.exit(true)
+		me.emediaPlugin.exit(true)
 	}
 
 	close = () => {
