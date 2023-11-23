@@ -155,12 +155,12 @@ class RtcInviteView extends React.Component{
 
 	cancel = () => {
     const me = this
-		const { userId, chatType } = RtcManager.inviteeInfo
+		const { userId, chatType, roomId } = RtcManager.inviteeInfo
 		this.props.sendTxtMessage(chatType, userId, {
 			msg: "取消音视频",
 			ext: {
 				conferenceNotice: 4,
-				conferenceId: this.props.username,
+				conferenceId: roomId,
 				isGroupChat: chatType === "chat" ? false : true,
 				fromNickName: this.props.username
 			}

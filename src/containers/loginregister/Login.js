@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {forwardRef} from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { Button, Row, Form, Input, Checkbox } from 'antd'
@@ -9,7 +9,7 @@ import WebIM from '@/config/WebIM'
 
 const FormItem = Form.Item
 
-const Login = ({
+const Login = forwardRef(({
     I18N,
     login,
     doLogin,
@@ -78,7 +78,7 @@ const Login = ({
             </div>
         </div>
     )
-}
+}, null);
 
 Login.propTypes = {
     form: PropTypes.object,

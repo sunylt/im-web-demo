@@ -12,6 +12,13 @@
 // }
 
 
+// socketServer: "https://private-imsock.dt-craft.com/ws",
+// restServer: "https://private-im.dt-craft.com",
+// appkey: 'yansongvip6test#demo',
+
+// socketServer: "https://im-api-v2.easemob.com/ws",
+// restServer: "https://a1.easemob.com",
+// appkey: 'easemob-demo#chatdemoui',
 
 var config = {
     /*
@@ -19,13 +26,17 @@ var config = {
      * im-api-v2.easemob.com/ws 线上环境
      * im-api-v2-hsb.easemob.com/ws 沙箱环境
      */
-    socketServer: "https://private-preview-imapi.easemob.com/ws",
+		socketServer: "https://private-imsock.dt-craft.com/ws",
+    // socketServer: "https://im-api-v2.easemob.com/ws",
+    // socketServer: "https://imsock-demo.dt-craft.com/ws",
     /*
      * Backend REST API URL
      * a1.easemob.com 线上环境
      * a1-hsb.easemob.com 沙箱环境
      */
-    restServer: "https://private-preview-a1.easemob.com",
+		restServer: "https://private-im.dt-craft.com",
+    // restServer: "https://a1.easemob.com",
+    // restServer: " https://im-demo.dt-craft.com",
 
 		/*
 		 * Config for VideoCall
@@ -38,7 +49,9 @@ var config = {
     /*
      * Application AppKey
      */
-    appkey: 'preview#chat',
+		appkey: 'yansongvip6test#demo',
+    // appkey: 'easemob-demo#chatdemoui',
+    // appkey: "dt-demo#chat",
     /*
      * Application Host
      */
@@ -75,12 +88,12 @@ var config = {
      * will auto connect the websocket server autoReconnectNumMax times in background when client is offline.
      * won't auto connect if autoReconnectNumMax=0.
      */
-    autoReconnectNumMax: 5,
+    autoReconnectNumMax: 0,
     /**
      * webrtc supports WebKit and https only
      */
     // isWebRTC: window.RTCPeerConnection && /^https\:$/.test(window.location.protocol),
-		isWebRTC: true,
+		isWebRTC: false,
     /*
      * Upload pictures or file to your own server and send message with url
      * @parameter {Boolean} true or false
@@ -122,6 +135,6 @@ var config = {
      */
     enableLocalStorage: true,
 
-    deviceId: 'newDevice'
+    deviceId: 'SOCKETJS'
 }
 export default config

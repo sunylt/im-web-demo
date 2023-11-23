@@ -2,9 +2,9 @@
 //import "script-loader!easemob-websdk/dist/strophe-1.2.8.js"
 /* eslint-enable */
 
-import websdk from './websdk3.4.1'
-// import websdk from 'easemob-websdk'
-import webrtc from './EMedia_x1v1_3.4.1'
+// import websdk from './websdk3.4.1'
+import websdk from 'easemob-websdk'
+// import webrtc from './EMedia_x1v1_3.4.1'
 // import webrtc from 'easemob-webrtc'
 
 // import emedia from './EMedia_sdk-dev'
@@ -51,7 +51,7 @@ if (WebIM.config.isSandBox) {
 
 WebIM.conn = new websdk.connection(options)
 
-websdk.debug(true)
+// websdk.debug(true)
 
 const appKeyPair = WebIM.config.appkey.split('#')
 export let api = Api.create({
@@ -92,8 +92,8 @@ api.interceptors.response.use(
 
 WebIM.api = api
 WebIM.emoji = emoji
-WebIM.WebRTC = webrtc;
+// WebIM.WebRTC = webrtc;
 
-WebIM.EMedia = webrtc.emedia
+// WebIM.EMedia = webrtc.emedia
 // webrtc.emedia.config.consoleLogger=false
 export default WebIM

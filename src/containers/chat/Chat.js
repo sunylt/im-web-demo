@@ -329,7 +329,8 @@ class Chat extends React.Component {
 					// 缓存被邀请人信息
 					RtcManager.inviteeInfo = {
 						userId: selectItem,
-						chatType: ctype
+						chatType: ctype,
+						roomId
 					}
 					setRtcStat(1)  // 为等待对方接听状态
 				})

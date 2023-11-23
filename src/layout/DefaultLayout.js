@@ -404,7 +404,7 @@ class DefaultLayout extends Component {
                         }}
                     >
                         {/* <WebRTCModal collapsed={false} visible={true} /> */}
-												<RtcInviteView />
+												{/* <RtcInviteView /> */}
                     </div>
                     <Content
                         className="x-layout-chat"

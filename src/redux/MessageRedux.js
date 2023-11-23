@@ -716,7 +716,7 @@ export const updateMessageStatus = (state, { message, status = '' }) => {
     if (!_.isEmpty(byId)) {
         const { type, chatId } = byId
         let messages = state.getIn([ type, chatId ]).asMutable()
-        let found = _.find(messages, { id: parseInt(id) })
+        let found = _.find(messages, { id })
         let msg = found.setIn([ 'status' ], status)
         msg = found.setIn([ 'toJid' ], mid)
         messages.splice(messages.indexOf(found), 1, msg)
@@ -741,7 +741,7 @@ export const updateMessageMid = (state, { id, mid }) => {
     if (!_.isEmpty(byId)) {
         const { type, chatId } = byId
         let messages = state.getIn([ type, chatId ]).asMutable()
-        let found = _.find(messages, { id: parseInt(id) })
+        let found = _.find(messages, { id })
         let msg = found.setIn([ 'toJid' ], mid)
         messages.splice(messages.indexOf(found), 1, msg)
         state = state.setIn([ type, chatId ], messages)
@@ -755,7 +755,7 @@ export const muteMessage = (state, { mid }) => {
     const { type, chatId } = state.getIn([ 'byId', id ], {})
     if (type && chatId) {
         const messages = state.getIn([ type, chatId ]).asMutable()
-        const found = _.find(messages, { id: parseInt(id) })
+        const found = _.find(messages, { id })
         const msg = found.setIn([ 'status' ], 'muted')
         messages.splice(messages.indexOf(found), 1, msg)
         state = state.setIn([ type, chatId ], messages)
